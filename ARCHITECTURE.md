@@ -76,11 +76,11 @@ graph TD
 
 ```mermaid
 sequenceDiagram
-    participant PE as Proactive Engine (Mac Mini)
-    participant AP as Apple APNs
-    participant CK as CallKit (iPhone)
+    participant PE as Proactive Engine [Server]
+    participant AP as Apple APNs [Transport]
+    participant CK as CallKit [Client]
     participant US as User
-    participant AG as Herald Agent
+    participant AG as Herald Agent [Server]
 
     PE->>PE: Detects trigger condition<br/>(exam in 18hrs, no study logged)
     PE->>AP: Send APNs push with trigger payload
