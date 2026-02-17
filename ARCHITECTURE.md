@@ -2,7 +2,11 @@
 
 ```mermaid
 flowchart LR
-    subgraph iPhone["📱 iPhone — iOS 18+"]
+    classDef iphone    fill:#2a1f00,stroke:#b8860b,color:#d4a017
+    classDef transport fill:#0a1f0f,stroke:#1d8348,color:#30d158
+    classDef server    fill:#001a3a,stroke:#0071e3,color:#4da3ff
+
+    subgraph iPhone["📱 iPhone — iOS 18+  [Client Layer]"]
         direction TB
         CK["⚡ CallKit\nAgent-initiated call UI"]
         SI["Siri / App Intents\nVoice trigger"]
@@ -12,7 +16,7 @@ flowchart LR
         MT["mTLS URLSession\nClient cert + server pinning"]
     end
 
-    subgraph Transport["🔒 Secure Transport"]
+    subgraph Transport["🔒 Secure Transport  [Transport Layer]"]
         direction TB
         TS["Tailscale\nWireGuard mesh — no public IP"]
         NX["Nginx Reverse Proxy\nssl_verify_client on\nRejects without device cert"]
@@ -20,7 +24,7 @@ flowchart LR
         PC["Pairing Store\nDevice public key registry\nTOTP revocation · 30-day rotation"]
     end
 
-    subgraph MacMini["🖥 Mac Mini M4 — Apple Silicon"]
+    subgraph MacMini["🖥 Mac Mini M4 — Apple Silicon  [Server Layer]"]
         direction TB
         AG["Herald Agent\nFastAPI · Tool-calling orchestration"]
         TR["Student Tool Registry\ngenerate_study_guide\nschedule_study_session\nsummarize_lecture\ndraft_professor_email\ncreate_assignment_reminder\ntrack_grades"]
@@ -41,6 +45,10 @@ flowchart LR
     SI --> MT
     IM --> MT
     NX --> PC
+
+    class CK,SI,IM,CC,SE,MT iphone
+    class TS,NX,AP,PC transport
+    class AG,TR,PE,LM server
 ```
 
 ---
