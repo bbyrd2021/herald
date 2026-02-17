@@ -57,10 +57,10 @@ flowchart LR
 
 ```mermaid
 graph TD
-    A["🟢 Tier 1 — On-device only\nMost private · least capable"]
-    B["🟡 Tier 2 — Herald\nYour hardware · device-bound auth · no third party"]
-    C["🔵 Tier 3 — Apple Private Cloud Compute\nStrong guarantees · still Apple's infrastructure"]
-    D["⚪ Tier 4 — Cloud APIs\nOpenAI · Anthropic · data leaves your control"]
+    A["🟢 Tier 1 — On-device only<br/>Most private · least capable"]
+    B["🟡 Tier 2 — Herald<br/>Your hardware · device-bound auth · no third party"]
+    C["🔵 Tier 3 — Apple Private Cloud Compute<br/>Strong guarantees · still Apple's infrastructure"]
+    D["⚪ Tier 4 — Cloud APIs<br/>OpenAI · Anthropic · data leaves your control"]
 
     A --> B --> C --> D
 
