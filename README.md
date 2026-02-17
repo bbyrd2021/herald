@@ -16,7 +16,7 @@ The authentication architecture is inspired by serial part tracking in military 
 
 ## Architecture
 
-Full system architecture diagram → [herald architecture](./index.html) · [architecture doc](./ARCHITECTURE.md)
+Full system architecture diagram → [herald architecture](https://bbyrd2021.github.io/herald) · [architecture doc](./ARCHITECTURE.md)
 
 **Three layers:**
 
