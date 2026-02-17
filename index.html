@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Herald — Architecture</title>
+<link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #000000;
+    --surface: #111111;
+    --surface2: #1a1a1a;
+    --border: rgba(255,255,255,0.08);
+    --border-bright: rgba(255,255,255,0.12);
+    --gold: #f5c842;
+    --gold2: #e8a800;
+    --gold-dim: rgba(245,200,66,0.15);
+    --gold-glow: rgba(245,200,66,0.06);
+    --blue: #0a84ff;
+    --blue-dim: rgba(10,132,255,0.12);
+    --green: #30d158;
+    --green-dim: rgba(48,209,88,0.1);
+    --text: #f5f5f7;
+    --text2: rgba(245,245,247,0.6);
+    --text3: rgba(245,245,247,0.35);
+    --radius: 18px;
+    --radius-sm: 10px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, 'Inter', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 56px 40px 64px;
+    position: relative;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Subtle background glow */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 50%;
+    transform: translateX(-50%);
+    width: 800px;
+    height: 400px;
+    background: radial-gradient(ellipse at center top, rgba(245,200,66,0.05) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    text-align: center;
+    margin-bottom: 64px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .herald-mark {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+
+  .herald-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    background: linear-gradient(145deg, #2a2200 0%, #1a1500 100%);
+    border: 1px solid rgba(245,200,66,0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    box-shadow: 0 0 20px rgba(245,200,66,0.1);
+  }
+
+  .herald-wordmark {
+    font-size: 28px;
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    color: var(--text);
+  }
+
+  .header h1 {
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--text3);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-top: 4px;
+  }
+
+  .header .tagline {
+    margin-top: 10px;
+    font-size: 15px;
+    color: var(--text2);
+    font-weight: 300;
+    letter-spacing: -0.01em;
+  }
+
+  /* ── LAYOUT ── */
+  .diagram {
+    width: 100%;
+    max-width: 1080px;
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: 1fr 72px 1fr 72px 1fr;
+    align-items: start;
+    gap: 0;
+  }
+
+  /* ── CARDS ── */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border-bright);
+    border-radius: var(--radius);
+    padding: 28px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.12), transparent);
+  }
+
+  .card.iphone {
+    border-color: rgba(245,200,66,0.2);
+    box-shadow: 0 0 0 1px rgba(245,200,66,0.05), 0 24px 48px rgba(0,0,0,0.4);
+  }
+
+  .card.iphone::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: radial-gradient(ellipse at top left, rgba(245,200,66,0.04) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .card.transport {
+    border-color: rgba(48,209,88,0.15);
+    box-shadow: 0 0 0 1px rgba(48,209,88,0.04), 0 24px 48px rgba(0,0,0,0.4);
+  }
+
+  .card.mac {
+    border-color: rgba(10,132,255,0.2);
+    box-shadow: 0 0 0 1px rgba(10,132,255,0.05), 0 24px 48px rgba(0,0,0,0.4);
+  }
+
+  .card.mac::after {
+    content: '';
+    position: absolute;
+    top: 0; right: 0; bottom: 0; left: 0;
+    background: radial-gradient(ellipse at top right, rgba(10,132,255,0.04) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  /* ── CARD HEADER ── */
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 24px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    z-index: 1;
+  }
+
+  .card-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 19px;
+    flex-shrink: 0;
+  }
+
+  .iphone .card-icon { background: rgba(245,200,66,0.1); border: 1px solid rgba(245,200,66,0.2); }
+  .transport .card-icon { background: rgba(48,209,88,0.08); border: 1px solid rgba(48,209,88,0.15); }
+  .mac .card-icon { background: rgba(10,132,255,0.1); border: 1px solid rgba(10,132,255,0.2); }
+
+  .card-title {
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: var(--text);
+  }
+
+  .card-sub {
+    font-size: 11px;
+    color: var(--text3);
+    margin-top: 2px;
+    letter-spacing: 0.02em;
+  }
+
+  /* ── SECTION LABELS ── */
+  .section-label {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text3);
+    margin: 18px 0 8px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ── COMPONENTS ── */
+  .comp {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 12px 14px;
+    margin-bottom: 6px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .comp:last-child { margin-bottom: 0; }
+
+  .comp-name {
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    color: var(--text);
+    margin-bottom: 3px;
+  }
+
+  .comp-detail {
+    font-size: 11px;
+    color: var(--text3);
+    line-height: 1.5;
+  }
+
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-top: 7px;
+  }
+
+  .tag {
+    font-size: 10px;
+    font-weight: 500;
+    padding: 2px 8px;
+    border-radius: 20px;
+    letter-spacing: 0.01em;
+  }
+
+  .tag.gold { background: rgba(245,200,66,0.12); color: var(--gold); border: 1px solid rgba(245,200,66,0.2); }
+  .tag.blue { background: rgba(10,132,255,0.1); color: #4da3ff; border: 1px solid rgba(10,132,255,0.2); }
+  .tag.green { background: rgba(48,209,88,0.08); color: #30d158; border: 1px solid rgba(48,209,88,0.15); }
+  .tag.gray { background: rgba(255,255,255,0.05); color: var(--text3); border: 1px solid var(--border); }
+
+  /* WOW component */
+  .comp.wow {
+    border-color: rgba(245,200,66,0.25);
+    background: linear-gradient(135deg, rgba(245,200,66,0.06) 0%, var(--surface2) 100%);
+  }
+
+  .comp.wow .comp-name { color: var(--gold); }
+
+  /* ── ARROWS ── */
+  .arrow-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    gap: 12px;
+    min-height: 200px;
+  }
+
+  .flow-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    width: 100%;
+  }
+
+  .flow-label {
+    font-size: 9px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    text-align: center;
+    line-height: 1.4;
+  }
+
+  .flow-label.gold-label { color: rgba(245,200,66,0.6); }
+  .flow-label.green-label { color: rgba(48,209,88,0.5); }
+  .flow-label.blue-label { color: rgba(10,132,255,0.6); }
+
+  .divider { width: 1px; height: 20px; background: var(--border); }
+
+  .proto-label {
+    font-size: 9px;
+    color: var(--text3);
+    text-align: center;
+    letter-spacing: 0.04em;
+    line-height: 1.5;
+  }
+
+  /* ── BOTTOM PANELS ── */
+  .panels {
+    width: 100%;
+    max-width: 1080px;
+    margin-top: 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    z-index: 1;
+    position: relative;
+  }
+
+  .panel {
+    background: var(--surface);
+    border: 1px solid var(--border-bright);
+    border-radius: var(--radius);
+    padding: 22px 24px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .panel::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+  }
+
+  .panel.wow-panel {
+    border-color: rgba(245,200,66,0.2);
+    background: linear-gradient(135deg, rgba(245,200,66,0.04) 0%, var(--surface) 60%);
+    grid-column: 1;
+  }
+
+  .panel.privacy-panel {
+    border-color: rgba(48,209,88,0.12);
+    background: linear-gradient(135deg, rgba(48,209,88,0.03) 0%, var(--surface) 60%);
+    grid-column: 2;
+  }
+
+  .panel-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+
+  .panel-icon { font-size: 18px; }
+
+  .panel-title {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  .wow-panel .panel-title { color: var(--gold); }
+  .privacy-panel .panel-title { color: var(--green); }
+
+  .panel-body {
+    font-size: 12px;
+    color: var(--text2);
+    line-height: 1.65;
+    font-weight: 300;
+  }
+
+  .panel-body strong { color: var(--text); font-weight: 500; }
+
+  /* Privacy hierarchy */
+  .privacy-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 7px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 12px;
+  }
+
+  .privacy-row:last-child { border-bottom: none; }
+
+  .privacy-rank {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+
+  .privacy-rank.r1 { background: rgba(48,209,88,0.15); color: var(--green); border: 1px solid rgba(48,209,88,0.2); }
+  .privacy-rank.r2 { background: rgba(245,200,66,0.12); color: var(--gold); border: 1px solid rgba(245,200,66,0.2); }
+  .privacy-rank.r3 { background: rgba(10,132,255,0.1); color: #4da3ff; border: 1px solid rgba(10,132,255,0.15); }
+  .privacy-rank.r4 { background: rgba(255,255,255,0.04); color: var(--text3); border: 1px solid var(--border); }
+
+  .privacy-row-text { color: var(--text2); font-size: 12px; }
+  .privacy-row-text strong { color: var(--text); font-weight: 500; }
+
+  /* ── FOOTER ── */
+  .footer {
+    margin-top: 40px;
+    font-size: 11px;
+    color: var(--text3);
+    letter-spacing: 0.04em;
+    text-align: center;
+    z-index: 1;
+    position: relative;
+  }
+
+  .footer span { color: var(--gold); opacity: 0.6; }
+
+  /* Arrow SVGs */
+  .arr { width: 56px; display: block; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="herald-mark">
+    <div class="herald-icon">📯</div>
+    <div class="herald-wordmark">Herald</div>
+  </div>
+  <h1>System Architecture · v0.1</h1>
+  <div class="tagline">Your personal AI agent. Private by design. It calls you.</div>
+</div>
+
+<!-- DIAGRAM -->
+<div class="diagram">
+
+  <!-- ══ iPhone ══ -->
+  <div class="card iphone">
+    <div class="card-header">
+      <div class="card-icon">📱</div>
+      <div>
+        <div class="card-title">iPhone</div>
+        <div class="card-sub">iOS 18+ · Client</div>
+      </div>
+    </div>
+
+    <div class="section-label">Interface</div>
+    <div class="comp wow">
+      <div class="comp-name">⚡ CallKit — Herald Calls You</div>
+      <div class="comp-detail">Agent-initiated native call UI<br>AVSpeechSynthesizer for voice output<br>You respond verbally, Herald acts</div>
+      <div class="tags">
+        <span class="tag gold">Wow Feature</span>
+        <span class="tag gold">CallKit</span>
+      </div>
+    </div>
+    <div class="comp">
+      <div class="comp-name">Siri / App Intents</div>
+      <div class="comp-detail">"Hey Siri, ask Herald to..."<br>Shortcut triggers agent pipeline</div>
+      <div class="tags"><span class="tag gray">App Intents API</span></div>
+    </div>
+    <div class="comp">
+      <div class="comp-name">iMessage Extension</div>
+      <div class="comp-detail">Text Herald like a contact<br>Natural async interface</div>
+      <div class="tags"><span class="tag gray">Messages API</span></div>
+    </div>
+
+    <div class="section-label">Context</div>
+    <div class="comp">
+      <div class="comp-name">Student Context Collector</div>
+      <div class="comp-detail">Calendar · Reminders · Notifications<br>Syllabus docs · Class schedule<br>Minimal payload — privacy trimmed</div>
+    </div>
+
+    <div class="section-label">Security</div>
+    <div class="comp">
+      <div class="comp-name">Secure Enclave Key Pair</div>
+      <div class="comp-detail">P256 — hardware bound<br>Private key never leaves device</div>
+      <div class="tags"><span class="tag gold">CryptoKit</span></div>
+    </div>
+    <div class="comp">
+      <div class="comp-name">mTLS URLSession</div>
+      <div class="comp-detail">Client cert + server cert pinning<br>Auth at handshake — before app</div>
+      <div class="tags"><span class="tag gold">TLS 1.3</span></div>
+    </div>
+  </div>
+
+  <!-- ══ Arrow 1 ══ -->
+  <div class="arrow-col">
+    <div class="flow-wrap">
+      <span class="flow-label gold-label">Encrypted<br>Request</span>
+      <svg class="arr" viewBox="0 0 56 16" fill="none">
+        <line x1="0" y1="8" x2="48" y2="8" stroke="rgba(245,200,66,0.4)" stroke-width="1.2" stroke-dasharray="3 3"/>
+        <polygon points="48,3 56,8 48,13" fill="rgba(245,200,66,0.4)"/>
+      </svg>
+    </div>
+    <div class="divider"></div>
+    <div class="proto-label">WireGuard<br>Tailscale</div>
+    <div class="divider"></div>
+    <div class="flow-wrap">
+      <svg class="arr" viewBox="0 0 56 16" fill="none">
+        <line x1="56" y1="8" x2="8" y2="8" stroke="rgba(48,209,88,0.4)" stroke-width="1.2" stroke-dasharray="3 3"/>
+        <polygon points="8,3 0,8 8,13" fill="rgba(48,209,88,0.4)"/>
+      </svg>
+      <span class="flow-label green-label">APNs Push<br>Response</span>
+    </div>
+  </div>
+
+  <!-- ══ Transport ══ -->
+  <div class="card transport">
+    <div class="card-header">
+      <div class="card-icon">🔒</div>
+      <div>
+        <div class="card-title">Secure Transport</div>
+        <div class="card-sub">Tailscale · WireGuard · Nginx</div>
+      </div>
+    </div>
+
+    <div class="comp">
+      <div class="comp-name">Tailscale Mesh Network</div>
+      <div class="comp-detail">Private WireGuard tunnel<br>iPhone ↔ Mac Mini only<br>No public IP exposed</div>
+      <div class="tags"><span class="tag green">Zero Trust</span></div>
+    </div>
+    <div class="comp">
+      <div class="comp-name">mTLS Nginx Proxy</div>
+      <div class="comp-detail">ssl_verify_client on<br>Rejects without device cert<br>LLM never internet-exposed</div>
+      <div class="tags"><span class="tag green">TLS 1.3</span></div>
+    </div>
+    <div class="comp">
+      <div class="comp-name">APNs Outbound</div>
+      <div class="comp-detail">Mac Mini → Apple APNs → iPhone<br>Triggers CallKit call UI<br>Payload metadata only</div>
+      <div class="tags"><span class="tag green">Proactive</span></div>
+    </div>
+    <div class="comp">
+      <div class="comp-name">Pairing Ceremony</div>
+      <div class="comp-detail">One-time QR-based key exchange<br>TOTP revocation if phone lost<br>30-day cert auto-rotation</div>
+      <div class="tags"><span class="tag green">Device-Bound</span></div>
+    </div>
+  </div>
+
+  <!-- ══ Arrow 2 ══ -->
+  <div class="arrow-col">
+    <div class="flow-wrap">
+      <span class="flow-label blue-label">Agent<br>Request</span>
+      <svg class="arr" viewBox="0 0 56 16" fill="none">
+        <line x1="0" y1="8" x2="48" y2="8" stroke="rgba(10,132,255,0.4)" stroke-width="1.2" stroke-dasharray="3 3"/>
+        <polygon points="48,3 56,8 48,13" fill="rgba(10,132,255,0.4)"/>
+      </svg>
+    </div>
+    <div class="divider"></div>
+    <div class="proto-label">Localhost<br>127.0.0.1</div>
+    <div class="divider"></div>
+    <div class="flow-wrap">
+      <svg class="arr" viewBox="0 0 56 16" fill="none">
+        <line x1="56" y1="8" x2="8" y2="8" stroke="rgba(10,132,255,0.4)" stroke-width="1.2" stroke-dasharray="3 3"/>
+        <polygon points="8,3 0,8 8,13" fill="rgba(10,132,255,0.4)"/>
+      </svg>
+      <span class="flow-label blue-label">Tool Result<br>Response</span>
+    </div>
+  </div>
+
+  <!-- ══ Mac Mini ══ -->
+  <div class="card mac">
+    <div class="card-header">
+      <div class="card-icon">🖥</div>
+      <div>
+        <div class="card-title">Mac Mini M4</div>
+        <div class="card-sub">Apple Silicon · 16GB · Always-On</div>
+      </div>
+    </div>
+
+    <div class="section-label">Agent Layer</div>
+    <div class="comp">
+      <div class="comp-name">Herald Agent (FastAPI)</div>
+      <div class="comp-detail">Tool-calling orchestration<br>Context window management<br>Proactive trigger monitor</div>
+      <div class="tags"><span class="tag blue">Python</span><span class="tag blue">Swift</span></div>
+    </div>
+
+    <div class="section-label">Student Tool Registry</div>
+    <div class="comp">
+      <div class="comp-name">Academic Tools</div>
+      <div class="comp-detail">
+        generate_study_guide(notes, topic)<br>
+        schedule_study_session(exam, deadline)<br>
+        summarize_lecture(transcript)<br>
+        draft_professor_email(context)<br>
+        create_assignment_reminder(due_date)<br>
+        track_grades(course)
+      </div>
+      <div class="tags"><span class="tag blue">Extensible</span></div>
+    </div>
+
+    <div class="section-label">Inference Layer</div>
+    <div class="comp">
+      <div class="comp-name">MLX + Local LLM</div>
+      <div class="comp-detail">Llama 3.1 8B / Mistral 7B<br>Apple Silicon optimized<br>&lt;2s response · No cloud calls</div>
+      <div class="tags"><span class="tag blue">MLX Framework</span></div>
+    </div>
+
+    <div class="section-label">Trigger Monitor</div>
+    <div class="comp wow" style="border-color:rgba(10,132,255,0.25); background: linear-gradient(135deg, rgba(10,132,255,0.06) 0%, var(--surface2) 100%);">
+      <div class="comp-name" style="color:#4da3ff;">Proactive Event Engine</div>
+      <div class="comp-detail">Exam in &lt;24hrs + no study session logged<br>Assignment due + not submitted<br>→ fires APNs → Herald calls you</div>
+      <div class="tags"><span class="tag blue">Background Task</span></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- BOTTOM PANELS -->
+<div class="panels">
+
+  <div class="panel wow-panel">
+    <div class="panel-header">
+      <span class="panel-icon">⚡</span>
+      <span class="panel-title">The Wow Feature</span>
+    </div>
+    <div class="panel-body">
+      The <strong>Proactive Event Engine</strong> monitors your academic context continuously. When it detects a trigger — exam in 2 hours with no recent study activity, assignment deadline approaching, unread professor message — it fires an APNs push to your iPhone.<br><br>
+      Your phone <strong>rings</strong>. Caller ID shows Herald. You pick up. The agent briefs you in natural speech and waits for your response. You reply verbally. It acts — builds a study guide, sets a reminder, drafts an email. <strong>Fully local. Zero cloud.</strong>
+    </div>
+  </div>
+
+  <div class="panel privacy-panel">
+    <div class="panel-header">
+      <span class="panel-icon">🛡</span>
+      <span class="panel-title">Privacy Hierarchy</span>
+    </div>
+    <div class="privacy-row">
+      <div class="privacy-rank r1">1</div>
+      <div class="privacy-row-text">On-device inference only — most private, least capable</div>
+    </div>
+    <div class="privacy-row">
+      <div class="privacy-rank r2">2</div>
+      <div class="privacy-row-text"><strong>Herald (this) — your hardware, device-bound auth, no third party</strong></div>
+    </div>
+    <div class="privacy-row">
+      <div class="privacy-rank r3">3</div>
+      <div class="privacy-row-text">Apple Private Cloud Compute — strong guarantees, still Apple's infra</div>
+    </div>
+    <div class="privacy-row">
+      <div class="privacy-rank r4">4</div>
+      <div class="privacy-row-text">Cloud APIs (OpenAI, Anthropic, etc.) — your data leaves your control</div>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  Herald · System Architecture v0.1 · <span>NC A&T → Apple</span> · Private by design
+</div>
+
+</body>
+</html>
