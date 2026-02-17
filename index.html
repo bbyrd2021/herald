@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Herald — Architecture</title>
+    <title>Herald</title>
     <style>
       :root {
         --bg: #f5f5f7;
@@ -84,6 +84,44 @@
         margin: 0 auto;
       }
 
+      /* ── HERO CTA ── */
+      .hero-cta {
+        display: flex;
+        gap: 12px;
+        justify-content: center;
+        margin-top: 36px;
+        flex-wrap: wrap;
+      }
+
+      .cta-btn {
+        display: inline-flex;
+        align-items: center;
+        padding: 13px 26px;
+        border-radius: 980px;
+        font-size: 15px;
+        font-weight: 600;
+        letter-spacing: -0.01em;
+        text-decoration: none;
+        transition: opacity 0.15s ease, transform 0.15s ease;
+      }
+
+      .cta-btn:hover {
+        opacity: 0.82;
+        transform: translateY(-1px);
+      }
+
+      .cta-primary {
+        background: var(--grad);
+        color: #1d1d1f;
+        box-shadow: 0 4px 18px rgba(69, 101, 125, 0.22);
+      }
+
+      .cta-ghost {
+        background: transparent;
+        color: var(--blue);
+        border: 1.5px solid rgba(0, 113, 227, 0.35);
+      }
+
       /* ── DIVIDER ── */
       .section-divider {
         width: 100%;
@@ -93,13 +131,7 @@
         background: var(--border-mid);
       }
 
-      /* ── ARCH SECTION ── */
-      .arch-section {
-        max-width: 1080px;
-        margin: 0 auto;
-        padding: 64px 40px;
-      }
-
+      /* ── SECTION EYEBROW + HEADLINE ── */
       .section-eyebrow {
         font-size: 13px;
         font-weight: 600;
@@ -124,6 +156,62 @@
         background-image: var(--grad);
       }
 
+      /* ── HOW IT WORKS ── */
+      .how-section {
+        max-width: 1080px;
+        margin: 0 auto;
+        padding: 80px 40px;
+      }
+
+      .steps-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+        margin-top: 0;
+      }
+
+      .step-card {
+        background: var(--surface);
+        border: 1px solid var(--border-mid);
+        border-radius: var(--radius);
+        padding: 32px 28px;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+      }
+
+      .step-num {
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        color: var(--text3);
+        margin-bottom: 14px;
+      }
+
+      .step-icon {
+        font-size: 28px;
+        margin-bottom: 12px;
+      }
+
+      .step-title {
+        font-size: 17px;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        color: var(--text);
+        margin-bottom: 10px;
+      }
+
+      .step-body {
+        font-size: 13px;
+        color: var(--text2);
+        line-height: 1.65;
+      }
+
+      /* ── ARCH SECTION ── */
+      .arch-section {
+        max-width: 1080px;
+        margin: 0 auto;
+        padding: 64px 40px;
+      }
+
       /* ── DIAGRAM GRID ── */
       .diagram {
         display: grid;
@@ -142,6 +230,14 @@
         box-shadow:
           0 2px 12px rgba(0, 0, 0, 0.06),
           0 1px 3px rgba(0, 0, 0, 0.04);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+      }
+
+      .card:hover {
+        transform: translateY(-3px);
+        box-shadow:
+          0 8px 32px rgba(0, 0, 0, 0.1),
+          0 2px 8px rgba(0, 0, 0, 0.06);
       }
 
       .card-header {
@@ -207,7 +303,26 @@
         border-radius: var(--radius-sm);
         padding: 12px 14px;
         margin-bottom: 6px;
+        transition: border-color 0.15s ease, background 0.15s ease, transform 0.15s ease;
       }
+
+      .comp[data-node] {
+        cursor: pointer;
+      }
+
+      .comp[data-node]:hover {
+        transform: translateX(3px);
+        border-color: var(--border-mid);
+      }
+
+      .comp[data-node]:focus-visible {
+        outline: 2px solid var(--blue);
+        outline-offset: 2px;
+        border-radius: var(--radius-sm);
+      }
+
+      .comp.wow[data-node]:hover { border-color: rgba(184, 134, 11, 0.45); }
+      .comp.wow-blue[data-node]:hover { border-color: rgba(0, 113, 227, 0.35); }
 
       .comp:last-child {
         margin-bottom: 0;
@@ -286,6 +401,48 @@
         color: var(--blue);
       }
 
+      /* ── NODE DETAIL (click-to-expand) ── */
+      .node-detail {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.32s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      }
+
+      .comp.is-open .node-detail {
+        max-height: 260px;
+      }
+
+      .node-detail-inner {
+        padding-top: 10px;
+        border-top: 1px dashed var(--border-mid);
+        margin-top: 10px;
+      }
+
+      .node-detail-inner p {
+        font-size: 11.5px;
+        color: var(--text2);
+        line-height: 1.6;
+        margin-bottom: 6px;
+      }
+
+      .node-detail-inner p:last-child {
+        margin-bottom: 0;
+      }
+
+      .node-detail-meta {
+        font-size: 10.5px;
+        color: var(--text3);
+      }
+
+      .node-detail-meta code {
+        font-family: "SF Mono", "Menlo", monospace;
+        font-size: 10px;
+        background: rgba(0, 0, 0, 0.05);
+        padding: 1px 5px;
+        border-radius: 3px;
+        color: var(--text2);
+      }
+
       /* ── ARROWS ── */
       .arrow-col {
         display: flex;
@@ -330,16 +487,146 @@
         display: block;
       }
 
-      /* ── BOTTOM PANELS ── */
-      .panels {
-        max-width: 1080px;
-        margin: 0 auto;
-        padding: 0 40px 80px;
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 16px;
+      @keyframes dashFlow {
+        to { stroke-dashoffset: -12; }
       }
 
+      .arr line {
+        stroke-dasharray: 3 3;
+        animation: dashFlow 1.2s linear infinite;
+      }
+
+      /* ── WOW FEATURE ── */
+      .wow-section {
+        max-width: 1080px;
+        margin: 0 auto;
+        padding: 80px 40px;
+      }
+
+      .wow-layout {
+        display: grid;
+        grid-template-columns: 1fr 380px;
+        gap: 56px;
+        margin-top: 0;
+        align-items: start;
+      }
+
+      .wow-lede {
+        font-size: 21px;
+        font-weight: 500;
+        letter-spacing: -0.02em;
+        color: var(--text);
+        line-height: 1.35;
+        margin-bottom: 20px;
+      }
+
+      .wow-body {
+        font-size: 15px;
+        color: var(--text2);
+        line-height: 1.7;
+        margin-bottom: 16px;
+      }
+
+      .wow-body code {
+        font-family: "SF Mono", "Menlo", monospace;
+        font-size: 13px;
+        background: rgba(0, 0, 0, 0.05);
+        padding: 1px 6px;
+        border-radius: 4px;
+        color: var(--text);
+      }
+
+      .wow-body em {
+        font-style: normal;
+        color: var(--gold);
+        font-weight: 500;
+      }
+
+      .wow-sequence {
+        background: var(--surface);
+        border: 1px solid rgba(184, 134, 11, 0.18);
+        border-radius: var(--radius);
+        padding: 28px 24px;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+      }
+
+      .seq-step {
+        display: flex;
+        align-items: flex-start;
+        gap: 14px;
+      }
+
+      .seq-connector {
+        width: 2px;
+        height: 20px;
+        background: var(--border-mid);
+        margin-left: 8px;
+        margin-top: 2px;
+        margin-bottom: 2px;
+      }
+
+      .seq-dot {
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        flex-shrink: 0;
+        margin-top: 2px;
+      }
+
+      .seq-dot--server   { background: rgba(0, 113, 227, 0.15); border: 1.5px solid rgba(0, 113, 227, 0.4); }
+      .seq-dot--transport{ background: rgba(29, 131, 72, 0.12); border: 1.5px solid rgba(29, 131, 72, 0.4); }
+      .seq-dot--phone    { background: rgba(184, 134, 11, 0.12); border: 1.5px solid rgba(184, 134, 11, 0.4); }
+      .seq-dot--agent    { background: rgba(0, 113, 227, 0.15); border: 1.5px solid rgba(0, 113, 227, 0.4); }
+      .seq-dot--result   { background: rgba(184, 134, 11, 0.2); border: 1.5px solid rgba(184, 134, 11, 0.5); }
+
+      .seq-content { flex: 1; }
+
+      .seq-label {
+        font-size: 10px;
+        font-weight: 600;
+        letter-spacing: 0.07em;
+        text-transform: uppercase;
+        color: var(--text3);
+        margin-bottom: 2px;
+      }
+
+      .seq-text {
+        font-size: 12px;
+        color: var(--text2);
+        line-height: 1.5;
+      }
+
+      /* ── PRIVACY ── */
+      .privacy-section {
+        max-width: 1080px;
+        margin: 0 auto;
+        padding: 80px 40px;
+      }
+
+      .privacy-layout {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 56px;
+        margin-top: 0;
+        align-items: start;
+      }
+
+      .privacy-lede {
+        font-size: 19px;
+        font-weight: 500;
+        letter-spacing: -0.02em;
+        color: var(--text);
+        line-height: 1.4;
+        margin-bottom: 18px;
+      }
+
+      .privacy-body {
+        font-size: 14px;
+        color: var(--text2);
+        line-height: 1.7;
+      }
+
+      /* reused panel styles */
       .panel {
         background: var(--surface);
         border: 1px solid var(--border-mid);
@@ -348,11 +635,10 @@
         box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
       }
 
-      .panel.wow-panel {
-        border-color: rgba(184, 134, 11, 0.2);
-      }
       .panel.privacy-panel {
         border-color: rgba(29, 131, 72, 0.15);
+        min-width: 320px;
+        max-width: 420px;
       }
 
       .panel-header {
@@ -361,9 +647,7 @@
         gap: 10px;
         margin-bottom: 16px;
       }
-      .panel-icon {
-        font-size: 20px;
-      }
+      .panel-icon { font-size: 20px; }
 
       .panel-title {
         font-size: 17px;
@@ -371,22 +655,7 @@
         letter-spacing: -0.02em;
       }
 
-      .wow-panel .panel-title {
-        color: var(--gold);
-      }
-      .privacy-panel .panel-title {
-        color: var(--green);
-      }
-
-      .panel-body {
-        font-size: 13px;
-        color: var(--text2);
-        line-height: 1.65;
-      }
-      .panel-body strong {
-        color: var(--text);
-        font-weight: 500;
-      }
+      .privacy-panel .panel-title { color: var(--green); }
 
       .privacy-row {
         display: flex;
@@ -396,9 +665,7 @@
         border-bottom: 1px solid var(--border);
         font-size: 12px;
       }
-      .privacy-row:last-child {
-        border-bottom: none;
-      }
+      .privacy-row:last-child { border-bottom: none; }
 
       .privacy-rank {
         width: 22px;
@@ -412,35 +679,116 @@
         flex-shrink: 0;
       }
 
-      .r1 {
-        background: rgba(29, 131, 72, 0.1);
-        color: var(--green);
-        border: 1px solid rgba(29, 131, 72, 0.2);
-      }
-      .r2 {
-        background: rgba(184, 134, 11, 0.1);
-        color: var(--gold);
-        border: 1px solid rgba(184, 134, 11, 0.2);
-      }
-      .r3 {
-        background: rgba(0, 113, 227, 0.08);
-        color: var(--blue);
-        border: 1px solid rgba(0, 113, 227, 0.15);
-      }
-      .r4 {
-        background: rgba(0, 0, 0, 0.04);
-        color: var(--text3);
-        border: 1px solid var(--border);
+      .r1 { background: rgba(29, 131, 72, 0.1); color: var(--green); border: 1px solid rgba(29, 131, 72, 0.2); }
+      .r2 { background: rgba(184, 134, 11, 0.1); color: var(--gold); border: 1px solid rgba(184, 134, 11, 0.2); }
+      .r3 { background: rgba(0, 113, 227, 0.08); color: var(--blue); border: 1px solid rgba(0, 113, 227, 0.15); }
+      .r4 { background: rgba(0, 0, 0, 0.04); color: var(--text3); border: 1px solid var(--border); }
+
+      .privacy-row-text { color: var(--text2); font-size: 12px; line-height: 1.4; }
+      .privacy-row-text strong { color: var(--text); font-weight: 500; }
+
+      /* ── TECH STACK ── */
+      .stack-section {
+        max-width: 1080px;
+        margin: 0 auto;
+        padding: 80px 40px;
       }
 
-      .privacy-row-text {
-        color: var(--text2);
-        font-size: 12px;
-        line-height: 1.4;
+      .stack-grid {
+        background: var(--surface);
+        border: 1px solid var(--border-mid);
+        border-radius: var(--radius);
+        overflow: hidden;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
       }
-      .privacy-row-text strong {
-        color: var(--text);
+
+      .stack-row {
+        display: grid;
+        grid-template-columns: 180px 1fr;
+        align-items: center;
+        padding: 18px 24px;
+        border-bottom: 1px solid var(--border);
+        gap: 24px;
+      }
+
+      .stack-row:last-child { border-bottom: none; }
+
+      .stack-layer {
+        font-size: 13px;
+        font-weight: 600;
+        letter-spacing: -0.01em;
+        color: var(--text2);
+      }
+
+      .stack-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+
+      /* ── ROADMAP ── */
+      .roadmap-section {
+        max-width: 1080px;
+        margin: 0 auto;
+        padding: 80px 40px;
+      }
+
+      .roadmap-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        gap: 12px;
+      }
+
+      .roadmap-item {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 16px 20px;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+      }
+
+      .roadmap-done {
+        border-color: rgba(29, 131, 72, 0.2);
+        background: rgba(29, 131, 72, 0.04);
+      }
+
+      .roadmap-check {
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 11px;
+        font-weight: 700;
+        flex-shrink: 0;
+        background: rgba(29, 131, 72, 0.12);
+        color: var(--green);
+        border: 1px solid rgba(29, 131, 72, 0.25);
+      }
+
+      .roadmap-check--pending {
+        background: rgba(0, 0, 0, 0.04);
+        color: transparent;
+        border: 1.5px dashed var(--border-mid);
+      }
+
+      .roadmap-text {
+        font-size: 14px;
         font-weight: 500;
+        color: var(--text2);
+        letter-spacing: -0.01em;
+      }
+
+      .roadmap-done .roadmap-text { color: var(--text); }
+
+      .roadmap-context {
+        margin-top: 36px;
+        font-size: 12px;
+        color: var(--text3);
+        text-align: center;
       }
 
       /* ── FOOTER ── */
@@ -450,33 +798,149 @@
         text-align: center;
         font-size: 12px;
         color: var(--text3);
+        margin-top: 40px;
       }
 
       .footer a {
         color: var(--blue);
         text-decoration: none;
       }
-      .footer a:hover {
-        text-decoration: underline;
+      .footer a:hover { text-decoration: underline; }
+
+      /* ── SCROLL REVEAL ── */
+      .reveal {
+        opacity: 0;
+        transform: translateY(28px);
+        transition:
+          opacity 0.55s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+          transform 0.55s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      }
+
+      .reveal.is-visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .reveal-child {
+        opacity: 0;
+        transform: translateY(20px);
+        transition:
+          opacity 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94) var(--delay, 0s),
+          transform 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94) var(--delay, 0s);
+      }
+
+      .is-visible .reveal-child {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      /* ── RESPONSIVE ── */
+      @media (max-width: 768px) {
+        .steps-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .diagram {
+          grid-template-columns: 1fr;
+        }
+
+        .arrow-col {
+          display: none;
+        }
+
+        .wow-layout {
+          grid-template-columns: 1fr;
+        }
+
+        .privacy-layout {
+          grid-template-columns: 1fr;
+        }
+
+        .privacy-panel {
+          max-width: 100%;
+          min-width: 0;
+        }
+
+        .stack-row {
+          grid-template-columns: 1fr;
+          gap: 10px;
+        }
+      }
+
+      /* ── REDUCED MOTION ── */
+      @media (prefers-reduced-motion: reduce) {
+        .reveal,
+        .reveal-child {
+          opacity: 1;
+          transform: none;
+          transition: none;
+        }
+
+        .arr line {
+          animation: none;
+        }
+
+        .card,
+        .comp,
+        .cta-btn {
+          transition: none;
+        }
       }
     </style>
   </head>
   <body>
     <!-- HERO -->
     <section class="hero">
-      <p class="eyebrow">Herald · System Architecture</p>
+      <p class="eyebrow">Herald — Private AI Agent for iOS</p>
       <h1 class="headline-super">Your AI calls&nbsp;you.</h1>
       <p class="hero-sub">
         A private, on-device AI agent for iOS. Local model. Device-bound
         authentication. No cloud. No compromise.
       </p>
+      <div class="hero-cta">
+        <a href="#how-it-works" class="cta-btn cta-primary">See how it works</a>
+        <a href="https://github.com/bbyrd2021/herald" class="cta-btn cta-ghost"
+           target="_blank" rel="noopener">View on GitHub</a>
+      </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- HOW IT WORKS -->
+    <section id="how-it-works" class="how-section reveal">
+      <p class="section-eyebrow">How it works</p>
+      <h2 class="section-headline">Local model. Private network.<br>It calls you.</h2>
+      <div class="steps-grid">
+
+        <div class="step-card reveal-child">
+          <div class="step-num">01</div>
+          <div class="step-icon">🔐</div>
+          <h3 class="step-title">Device-Bound Auth</h3>
+          <p class="step-body">A P256 key pair is generated in your iPhone's Secure Enclave during a one-time QR pairing ceremony. The private key never leaves your device. The server recognizes only this phone — no credentials, no tokens, no password resets.</p>
+        </div>
+
+        <div class="step-card reveal-child" style="--delay: 0.1s">
+          <div class="step-num">02</div>
+          <div class="step-icon">🌐</div>
+          <h3 class="step-title">Private Tunnel</h3>
+          <p class="step-body">Requests travel through a WireGuard mesh (Tailscale) to your Mac Mini M4. No public IP, no cloud relay. Nginx terminates mTLS — if the device certificate is absent, the connection is dropped before the app sees it.</p>
+        </div>
+
+        <div class="step-card reveal-child" style="--delay: 0.2s">
+          <div class="step-num">03</div>
+          <div class="step-icon">⚡</div>
+          <h3 class="step-title">Herald Calls You</h3>
+          <p class="step-body">The proactive engine monitors your academic context. Exam in 2 hours with no study session logged? It fires an APNs push. Your phone rings. Herald briefs you. You respond verbally. It acts — fully local, zero cloud.</p>
+        </div>
+
+      </div>
     </section>
 
     <div class="section-divider"></div>
 
     <!-- ARCHITECTURE -->
-    <section class="arch-section">
-      <p class="section-eyebrow">How it works</p>
+    <section id="architecture" class="arch-section reveal">
+      <p class="section-eyebrow">System architecture</p>
       <h2 class="section-headline">Built for privacy.<br />Designed to act.</h2>
 
       <div class="diagram">
@@ -486,12 +950,12 @@
             <div class="card-icon">📱</div>
             <div>
               <div class="card-title">iPhone</div>
-              <div class="card-sub">iOS 18+ · Client</div>
+              <div class="card-sub">iOS 18+ · Client Layer</div>
             </div>
           </div>
 
           <div class="section-label">Interface</div>
-          <div class="comp wow">
+          <div class="comp wow" data-node="callkit" tabindex="0" role="button" aria-expanded="false" aria-label="CallKit — expand details">
             <div class="comp-name">⚡ CallKit — Herald Calls You</div>
             <div class="comp-detail">
               Agent-initiated native call UI<br />AVSpeechSynthesizer voice
@@ -501,14 +965,26 @@
               <span class="tag gold">Wow Feature</span>
               <span class="tag gold">CallKit</span>
             </div>
+            <div class="node-detail" aria-hidden="true">
+              <div class="node-detail-inner">
+                <p>CallKit presents a native iOS call UI — the highest-attention surface on the device. An APNs VoIP push wakes the app from background; it calls <code>CXProvider.reportNewIncomingCall()</code>. The phone rings exactly like a real call.</p>
+                <p class="node-detail-meta">Audio out: <code>AVSpeechSynthesizer</code> · Audio in: <code>SFSpeechRecognizer</code> · Trigger: APNs VoIP push</p>
+              </div>
+            </div>
           </div>
-          <div class="comp">
+          <div class="comp" data-node="siri" tabindex="0" role="button" aria-expanded="false" aria-label="Siri — expand details">
             <div class="comp-name">Siri / App Intents</div>
             <div class="comp-detail">
               "Hey Siri, ask Herald to..."<br />Shortcut triggers agent pipeline
             </div>
             <div class="tags">
               <span class="tag gray">App Intents API</span>
+            </div>
+            <div class="node-detail" aria-hidden="true">
+              <div class="node-detail-inner">
+                <p>App Intents exposes Herald's tool registry to Siri and Shortcuts. Users can trigger any tool by voice without opening the app. The intent receives a result from the agent and speaks it back via Siri's TTS.</p>
+                <p class="node-detail-meta">Framework: <code>AppIntents</code> · iOS 16+</p>
+              </div>
             </div>
           </div>
           <div class="comp">
@@ -529,20 +1005,32 @@
           </div>
 
           <div class="section-label">Security</div>
-          <div class="comp">
+          <div class="comp" data-node="secure-enclave" tabindex="0" role="button" aria-expanded="false" aria-label="Secure Enclave — expand details">
             <div class="comp-name">Secure Enclave Key Pair</div>
             <div class="comp-detail">
               P256 — hardware bound<br />Private key never leaves device
             </div>
             <div class="tags"><span class="tag gold">CryptoKit</span></div>
+            <div class="node-detail" aria-hidden="true">
+              <div class="node-detail-inner">
+                <p>A P256 key pair is generated inside the Secure Enclave at first launch. The private key is hardware-bound — not even the app can export it. Authentication is cryptographic proof-of-device, not a credential that can be phished or stolen.</p>
+                <p class="node-detail-meta">API: <code>SecureEnclave.P256.Signing</code> via CryptoKit · Inspiration: serial part tracking in military aircraft maintenance</p>
+              </div>
+            </div>
           </div>
-          <div class="comp">
+          <div class="comp" data-node="mtls" tabindex="0" role="button" aria-expanded="false" aria-label="mTLS URLSession — expand details">
             <div class="comp-name">mTLS URLSession</div>
             <div class="comp-detail">
               Client cert + server cert pinning<br />Auth at handshake — before
               app
             </div>
             <div class="tags"><span class="tag gold">TLS 1.3</span></div>
+            <div class="node-detail" aria-hidden="true">
+              <div class="node-detail-inner">
+                <p>Every outbound request uses <code>URLSession</code> configured with the client certificate from Keychain. Nginx validates the cert before the connection reaches FastAPI. Invalid or absent cert = TLS handshake failure — the agent never sees the request.</p>
+                <p class="node-detail-meta">Protocol: TLS 1.3 · Client auth: device-bound P256 cert · Server auth: certificate pinning</p>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -558,7 +1046,6 @@
                 y2="8"
                 stroke="rgba(184,134,11,0.35)"
                 stroke-width="1.2"
-                stroke-dasharray="3 3"
               />
               <polygon points="46,3 54,8 46,13" fill="rgba(184,134,11,0.35)" />
             </svg>
@@ -575,7 +1062,6 @@
                 y2="8"
                 stroke="rgba(29,131,72,0.4)"
                 stroke-width="1.2"
-                stroke-dasharray="3 3"
               />
               <polygon points="8,3 0,8 8,13" fill="rgba(29,131,72,0.4)" />
             </svg>
@@ -589,33 +1075,51 @@
             <div class="card-icon">🔒</div>
             <div>
               <div class="card-title">Secure Transport</div>
-              <div class="card-sub">Tailscale · WireGuard · Nginx</div>
+              <div class="card-sub">Transport Layer · No public IP</div>
             </div>
           </div>
 
-          <div class="comp">
+          <div class="comp" data-node="tailscale" tabindex="0" role="button" aria-expanded="false" aria-label="Tailscale — expand details">
             <div class="comp-name">Tailscale Mesh Network</div>
             <div class="comp-detail">
               Private WireGuard tunnel<br />iPhone ↔ Mac Mini only<br />No
               public IP exposed
             </div>
             <div class="tags"><span class="tag green">Zero Trust</span></div>
+            <div class="node-detail" aria-hidden="true">
+              <div class="node-detail-inner">
+                <p>Tailscale builds a WireGuard mesh between enrolled devices. The Mac Mini has no public-facing IP — it's only reachable from enrolled nodes. When a direct path is available, traffic is peer-to-peer. Tailscale's relay servers never see payload content.</p>
+                <p class="node-detail-meta">Protocol: WireGuard (UDP) · Key rotation: automatic · Relay: DERP (fallback only)</p>
+              </div>
+            </div>
           </div>
-          <div class="comp">
+          <div class="comp" data-node="nginx" tabindex="0" role="button" aria-expanded="false" aria-label="Nginx — expand details">
             <div class="comp-name">mTLS Nginx Proxy</div>
             <div class="comp-detail">
               ssl_verify_client on<br />Rejects without device cert<br />LLM
               never internet-exposed
             </div>
             <div class="tags"><span class="tag green">TLS 1.3</span></div>
+            <div class="node-detail" aria-hidden="true">
+              <div class="node-detail-inner">
+                <p><code>ssl_verify_client on</code> — Nginx validates the client certificate on every request. Without a valid device cert signed by the pairing CA, the TLS handshake fails and FastAPI never receives the connection. This is the second auth layer after WireGuard.</p>
+                <p class="node-detail-meta">Config: <code>ssl_verify_client on</code> · <code>ssl_verify_depth 2</code> · Protocol: TLS 1.3 only</p>
+              </div>
+            </div>
           </div>
-          <div class="comp">
+          <div class="comp" data-node="apns" tabindex="0" role="button" aria-expanded="false" aria-label="APNs — expand details">
             <div class="comp-name">APNs Outbound</div>
             <div class="comp-detail">
               Mac Mini → Apple APNs → iPhone<br />Triggers CallKit call UI<br />Metadata
               only in payload
             </div>
             <div class="tags"><span class="tag green">Proactive</span></div>
+            <div class="node-detail" aria-hidden="true">
+              <div class="node-detail-inner">
+                <p>The proactive engine sends a push to Apple APNs with only metadata in the payload — trigger type and timestamp, never personal context. APNs delivers it to the iPhone; the app wakes and initiates the CallKit flow. No personal data transits Apple's servers.</p>
+                <p class="node-detail-meta">Push type: VoIP (<code>apns-push-type: voip</code>) · Payload: trigger type + timestamp only</p>
+              </div>
+            </div>
           </div>
           <div class="comp">
             <div class="comp-name">Pairing Ceremony</div>
@@ -639,7 +1143,6 @@
                 y2="8"
                 stroke="rgba(0,113,227,0.35)"
                 stroke-width="1.2"
-                stroke-dasharray="3 3"
               />
               <polygon points="46,3 54,8 46,13" fill="rgba(0,113,227,0.35)" />
             </svg>
@@ -656,7 +1159,6 @@
                 y2="8"
                 stroke="rgba(0,113,227,0.35)"
                 stroke-width="1.2"
-                stroke-dasharray="3 3"
               />
               <polygon points="8,3 0,8 8,13" fill="rgba(0,113,227,0.35)" />
             </svg>
@@ -670,7 +1172,7 @@
             <div class="card-icon">🖥</div>
             <div>
               <div class="card-title">Mac Mini M4</div>
-              <div class="card-sub">Apple Silicon · 16GB · Always-On</div>
+              <div class="card-sub">Server Layer · Always-On</div>
             </div>
           </div>
 
@@ -702,17 +1204,23 @@
           </div>
 
           <div class="section-label">Inference</div>
-          <div class="comp">
+          <div class="comp" data-node="mlx" tabindex="0" role="button" aria-expanded="false" aria-label="MLX — expand details">
             <div class="comp-name">MLX + Local LLM</div>
             <div class="comp-detail">
               Llama 3.1 8B / Mistral 7B<br />Apple Silicon optimized · &lt;2s
               latency<br />Zero cloud calls
             </div>
             <div class="tags"><span class="tag blue">MLX Framework</span></div>
+            <div class="node-detail" aria-hidden="true">
+              <div class="node-detail-inner">
+                <p>MLX is Apple's array framework built for Apple Silicon's unified memory architecture. LLM weights and compute share the same memory pool — no PCIe bus overhead. Llama 3.1 8B achieves &lt;2s first-token latency on M4. Zero cloud calls, zero API costs.</p>
+                <p class="node-detail-meta">Models: Llama 3.1 8B, Mistral 7B · Backend: MLX · Hardware: Mac Mini M4 16GB unified memory</p>
+              </div>
+            </div>
           </div>
 
           <div class="section-label">Trigger Engine</div>
-          <div class="comp wow-blue">
+          <div class="comp wow-blue" data-node="proactive-engine" tabindex="0" role="button" aria-expanded="false" aria-label="Proactive Engine — expand details">
             <div class="comp-name">Proactive Event Monitor</div>
             <div class="comp-detail">
               Exam &lt;24hrs + no study session logged<br />Assignment due + not
@@ -721,6 +1229,12 @@
             <div class="tags">
               <span class="tag blue">Background Task</span>
             </div>
+            <div class="node-detail" aria-hidden="true">
+              <div class="node-detail-inner">
+                <p>APScheduler runs a polling loop on the Mac Mini, querying calendar events, reminders, and study logs. When a trigger condition fires, it calls the APNs send function. Thresholds, polling interval, and conditions are tunable without redeployment.</p>
+                <p class="node-detail-meta">Scheduler: APScheduler · Trigger log: timestamps only, no personal data · Cooldown: 24hr per trigger type</p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -728,70 +1242,338 @@
 
     <div class="section-divider"></div>
 
-    <!-- PANELS HEADER -->
-    <section style="max-width: 1080px; margin: 0 auto; padding: 56px 40px 0">
-      <p class="section-eyebrow">Key design decisions</p>
-      <h2 class="section-headline">Why Herald is different.</h2>
+    <!-- WOW FEATURE -->
+    <section id="wow-feature" class="wow-section reveal">
+      <p class="section-eyebrow">The differentiating feature</p>
+      <h2 class="section-headline">The agent calls you.</h2>
+      <div class="wow-layout">
+
+        <div class="wow-narrative">
+          <p class="wow-lede">
+            Every other AI assistant waits for you to remember to ask.
+            Herald doesn't wait.
+          </p>
+          <p class="wow-body">
+            The <strong>Proactive Event Engine</strong> runs continuously on your Mac Mini,
+            watching your academic context — calendar events, reminders, study logs.
+            When it detects a trigger condition, it acts without being asked.
+          </p>
+          <p class="wow-body">
+            An APNs push fires to your iPhone. Your phone <strong>rings</strong>.
+            Caller ID: Herald. You pick up. The agent speaks through
+            <code>AVSpeechSynthesizer</code>:
+            <em>"You have your OS exam in 18 hours. Want me to build a study guide?"</em>
+          </p>
+          <p class="wow-body">
+            You reply verbally. It calls <code>generate_study_guide()</code>,
+            speaks a summary of key concepts, then asks if you want study reminders set.
+            Fully local. Zero cloud. Zero latency budget burned on a round-trip to an API.
+          </p>
+        </div>
+
+        <div class="wow-sequence">
+          <div class="seq-step">
+            <div class="seq-dot seq-dot--server"></div>
+            <div class="seq-content">
+              <div class="seq-label">Mac Mini · Proactive Engine</div>
+              <div class="seq-text">Detects exam in 18hrs, no study session logged</div>
+            </div>
+          </div>
+          <div class="seq-connector"></div>
+          <div class="seq-step">
+            <div class="seq-dot seq-dot--transport"></div>
+            <div class="seq-content">
+              <div class="seq-label">Apple APNs</div>
+              <div class="seq-text">Encrypted VoIP push payload fires</div>
+            </div>
+          </div>
+          <div class="seq-connector"></div>
+          <div class="seq-step">
+            <div class="seq-dot seq-dot--phone"></div>
+            <div class="seq-content">
+              <div class="seq-label">iPhone · CallKit</div>
+              <div class="seq-text">Phone rings — "Herald" on caller ID</div>
+            </div>
+          </div>
+          <div class="seq-connector"></div>
+          <div class="seq-step">
+            <div class="seq-dot seq-dot--agent"></div>
+            <div class="seq-content">
+              <div class="seq-label">Herald Agent · Mac Mini</div>
+              <div class="seq-text">Speaks via AVSpeechSynthesizer, waits for verbal reply</div>
+            </div>
+          </div>
+          <div class="seq-connector"></div>
+          <div class="seq-step">
+            <div class="seq-dot seq-dot--result"></div>
+            <div class="seq-content">
+              <div class="seq-label">Tool Result</div>
+              <div class="seq-text">generate_study_guide() called — fully local, &lt;2s</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
     </section>
 
-    <!-- PANELS -->
-    <div class="panels">
-      <div class="panel wow-panel">
-        <div class="panel-header">
-          <span class="panel-icon">⚡</span>
-          <span class="panel-title">The Agent Calls You</span>
-        </div>
-        <div class="panel-body">
-          The <strong>Proactive Event Monitor</strong> runs continuously on your
-          Mac Mini, watching your academic context. When it detects a trigger —
-          exam in 2 hours with no recent study activity, assignment deadline
-          approaching — it fires an APNs push to your iPhone.<br /><br />
-          Your phone <strong>rings</strong>. Caller ID shows Herald. You pick
-          up. The agent briefs you and waits for your response. You reply
-          verbally. It acts — builds a study guide, sets a reminder, drafts an
-          email. <strong>Fully local. Zero cloud.</strong>
-        </div>
-      </div>
+    <div class="section-divider"></div>
 
-      <div class="panel privacy-panel">
-        <div class="panel-header">
-          <span class="panel-icon">🛡</span>
-          <span class="panel-title">Privacy Hierarchy</span>
-        </div>
-        <div class="privacy-row">
-          <div class="privacy-rank r1">1</div>
-          <div class="privacy-row-text">
-            On-device only — most private, least capable
-          </div>
-        </div>
-        <div class="privacy-row">
-          <div class="privacy-rank r2">2</div>
-          <div class="privacy-row-text">
-            <strong
-              >Herald — your hardware, device-bound auth, no third party</strong
-            >
-          </div>
-        </div>
-        <div class="privacy-row">
-          <div class="privacy-rank r3">3</div>
-          <div class="privacy-row-text">
-            Apple Private Cloud Compute — strong guarantees, still Apple's infra
-          </div>
-        </div>
-        <div class="privacy-row">
-          <div class="privacy-rank r4">4</div>
-          <div class="privacy-row-text">
-            Cloud APIs (OpenAI, etc.) — your data leaves your control
-          </div>
-        </div>
-      </div>
-    </div>
+    <!-- PRIVACY -->
+    <section id="privacy" class="privacy-section reveal">
+      <p class="section-eyebrow">Privacy model</p>
+      <h2 class="section-headline">Not policy. Architecture.</h2>
+      <div class="privacy-layout">
 
-    <footer class="footer" style="margin-top: 40px">
-      Herald · System Architecture v0.1 · Built at NC A&T ·
-      <a href="https://github.com/bbyrd2021/herald" target="_blank"
-        >github.com/bbyrd2021/herald</a
-      >
+        <div>
+          <p class="privacy-lede">
+            The privacy guarantee in Herald is not a terms-of-service commitment.
+            It's structural. There is no third party in the chain because there is
+            no third party in the architecture.
+          </p>
+          <p class="privacy-body">
+            The authentication model is inspired by serial part tracking in military
+            aircraft maintenance — where specific components are permanently tied to
+            a specific airframe in a way that is traceable, accountable, and
+            non-transferable. Herald applies the same logic to device identity: a P256
+            key pair generated in the iPhone's Secure Enclave. The server and the device
+            recognize only each other. No intermediary. No third party to trust,
+            subpoena, or breach.
+          </p>
+        </div>
+
+        <div class="panel privacy-panel">
+          <div class="panel-header">
+            <span class="panel-icon">🛡</span>
+            <span class="panel-title">Privacy Hierarchy</span>
+          </div>
+          <div class="privacy-row">
+            <div class="privacy-rank r1">1</div>
+            <div class="privacy-row-text">
+              On-device only — most private, least capable
+            </div>
+          </div>
+          <div class="privacy-row">
+            <div class="privacy-rank r2">2</div>
+            <div class="privacy-row-text">
+              <strong>Herald — your hardware, device-bound auth, no third party</strong>
+            </div>
+          </div>
+          <div class="privacy-row">
+            <div class="privacy-rank r3">3</div>
+            <div class="privacy-row-text">
+              Apple Private Cloud Compute — strong guarantees, still Apple's infra
+            </div>
+          </div>
+          <div class="privacy-row">
+            <div class="privacy-rank r4">4</div>
+            <div class="privacy-row-text">
+              Cloud APIs (OpenAI, etc.) — your data leaves your control
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- TECH STACK -->
+    <section id="tech-stack" class="stack-section reveal">
+      <p class="section-eyebrow">Tech stack</p>
+      <h2 class="section-headline">Built on Apple-first primitives.</h2>
+      <div class="stack-grid">
+
+        <div class="stack-row reveal-child">
+          <div class="stack-layer">iOS Client</div>
+          <div class="stack-tags">
+            <span class="tag gold">Swift</span>
+            <span class="tag gold">SwiftUI</span>
+            <span class="tag gold">CallKit</span>
+            <span class="tag gold">App Intents</span>
+            <span class="tag gold">CryptoKit</span>
+            <span class="tag gold">AVSpeechSynthesizer</span>
+          </div>
+        </div>
+
+        <div class="stack-row reveal-child" style="--delay: 0.05s">
+          <div class="stack-layer">Authentication</div>
+          <div class="stack-tags">
+            <span class="tag gold">Secure Enclave P256</span>
+            <span class="tag gold">mTLS</span>
+            <span class="tag gold">Certificate Pinning</span>
+          </div>
+        </div>
+
+        <div class="stack-row reveal-child" style="--delay: 0.10s">
+          <div class="stack-layer">Transport</div>
+          <div class="stack-tags">
+            <span class="tag green">Tailscale (WireGuard)</span>
+            <span class="tag green">Nginx</span>
+          </div>
+        </div>
+
+        <div class="stack-row reveal-child" style="--delay: 0.15s">
+          <div class="stack-layer">Agent</div>
+          <div class="stack-tags">
+            <span class="tag blue">Python</span>
+            <span class="tag blue">FastAPI</span>
+            <span class="tag blue">APScheduler</span>
+          </div>
+        </div>
+
+        <div class="stack-row reveal-child" style="--delay: 0.20s">
+          <div class="stack-layer">Inference</div>
+          <div class="stack-tags">
+            <span class="tag blue">MLX</span>
+            <span class="tag blue">Llama 3.1 8B</span>
+            <span class="tag blue">Mistral 7B</span>
+          </div>
+        </div>
+
+        <div class="stack-row reveal-child" style="--delay: 0.25s">
+          <div class="stack-layer">Push</div>
+          <div class="stack-tags">
+            <span class="tag green">APNs</span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- ROADMAP -->
+    <section id="roadmap" class="roadmap-section reveal">
+      <p class="section-eyebrow">Status · Roadmap</p>
+      <h2 class="section-headline">In active development.</h2>
+      <div class="roadmap-grid">
+
+        <div class="roadmap-item roadmap-done reveal-child">
+          <div class="roadmap-check">✓</div>
+          <div class="roadmap-text">Architecture finalized</div>
+        </div>
+
+        <div class="roadmap-item reveal-child" style="--delay: 0.05s">
+          <div class="roadmap-check roadmap-check--pending"></div>
+          <div class="roadmap-text">mTLS pairing ceremony</div>
+        </div>
+
+        <div class="roadmap-item reveal-child" style="--delay: 0.10s">
+          <div class="roadmap-check roadmap-check--pending"></div>
+          <div class="roadmap-text">FastAPI agent + tool registry</div>
+        </div>
+
+        <div class="roadmap-item reveal-child" style="--delay: 0.15s">
+          <div class="roadmap-check roadmap-check--pending"></div>
+          <div class="roadmap-text">MLX inference integration</div>
+        </div>
+
+        <div class="roadmap-item reveal-child" style="--delay: 0.20s">
+          <div class="roadmap-check roadmap-check--pending"></div>
+          <div class="roadmap-text">CallKit proactive call flow</div>
+        </div>
+
+        <div class="roadmap-item reveal-child" style="--delay: 0.25s">
+          <div class="roadmap-check roadmap-check--pending"></div>
+          <div class="roadmap-text">Siri / App Intents integration</div>
+        </div>
+
+        <div class="roadmap-item reveal-child" style="--delay: 0.30s">
+          <div class="roadmap-check roadmap-check--pending"></div>
+          <div class="roadmap-text">iMessage Extension</div>
+        </div>
+
+        <div class="roadmap-item reveal-child" style="--delay: 0.35s">
+          <div class="roadmap-check roadmap-check--pending"></div>
+          <div class="roadmap-text">iOS app UI</div>
+        </div>
+
+      </div>
+      <p class="roadmap-context">
+        Built at NC A&T · COMP 710 · Spring 2025 · Demo target: February 25, 2026
+      </p>
+    </section>
+
+    <footer class="footer">
+      Herald · Built at NC A&T ·
+      <a href="https://github.com/bbyrd2021/herald" target="_blank">github.com/bbyrd2021/herald</a>
     </footer>
+
+    <script>
+      (function () {
+        'use strict';
+
+        // ── SCROLL REVEAL ────────────────────────────────────────
+        var revealObserver = new IntersectionObserver(
+          function (entries) {
+            entries.forEach(function (entry) {
+              if (entry.isIntersecting) {
+                entry.target.classList.add('is-visible');
+                revealObserver.unobserve(entry.target);
+              }
+            });
+          },
+          {
+            threshold: 0.12,
+            rootMargin: '0px 0px -40px 0px'
+          }
+        );
+
+        document.querySelectorAll('.reveal').forEach(function (el) {
+          revealObserver.observe(el);
+        });
+
+        // ── SMOOTH SCROLL ────────────────────────────────────────
+        document.querySelectorAll('a[href^="#"]').forEach(function (anchor) {
+          anchor.addEventListener('click', function (e) {
+            var target = document.querySelector(anchor.getAttribute('href'));
+            if (target) {
+              e.preventDefault();
+              target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+          });
+        });
+
+        // ── INTERACTIVE DIAGRAM ──────────────────────────────────
+        var nodes = document.querySelectorAll('.comp[data-node]');
+
+        function closeAll() {
+          nodes.forEach(function (n) {
+            n.classList.remove('is-open');
+            n.setAttribute('aria-expanded', 'false');
+            var detail = n.querySelector('.node-detail');
+            if (detail) detail.setAttribute('aria-hidden', 'true');
+          });
+        }
+
+        nodes.forEach(function (node) {
+          function toggle() {
+            var isOpen = node.classList.contains('is-open');
+            closeAll();
+            if (!isOpen) {
+              node.classList.add('is-open');
+              node.setAttribute('aria-expanded', 'true');
+              var detail = node.querySelector('.node-detail');
+              if (detail) detail.setAttribute('aria-hidden', 'false');
+            }
+          }
+
+          node.addEventListener('click', function (e) {
+            e.stopPropagation();
+            toggle();
+          });
+
+          node.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              toggle();
+            }
+          });
+        });
+
+        document.addEventListener('click', closeAll);
+
+      })();
+    </script>
   </body>
 </html>
